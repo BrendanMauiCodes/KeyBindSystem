@@ -17,15 +17,13 @@ local StoredKeybinds = {
 For the server put the name of the keybind you put in the other module or else it wont work looks like this
 
 ```
-  function Actions.Name of action on the client module(player, inputState)
+function Actions.Name of action on the client module(player, inputState)
       What input stae you want the key to do something like this
-      ```
       if inputState == Enum.UserInputState.Begin then
         What the action does when you hold the Key
       elseif input == Enum.UserInputState.End then
         What the action does when you let go of the key
       end
-      ```
   end
 ```
 Also if you add an other action then do the same thing up there with the name for the other action.
