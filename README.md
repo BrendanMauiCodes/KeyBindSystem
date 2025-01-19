@@ -1,7 +1,9 @@
-#Credits
+```
+Credits
   teacherthomas2 on roblox was my teacher and helped me make this
   @sparalic helped me with the github,terminal, and made my account
-  
+
+```
 
 To add, remove, or change a keybind then look in stored keybinds then look at the `UserInputType` you want it to be(Keys,Gampdad) then inside the player dictionary key looks like this.
 
