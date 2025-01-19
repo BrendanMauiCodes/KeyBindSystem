@@ -1,0 +1,74 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+local UpdateSprintBar = Remotes:WaitForChild("UpdateSprintBar")
+local ToggleSprintBar = Remotes:WaitForChild("ToggleSprintUI")
+
+local SPRINT_SPEED = 20
+local SPRINT_COST = 5--Stamina Per Sec
+local SPRINT_RATE = 0.5--amount of sec to wait
+local RATE_COST = SPRINT_COST * SPRINT_RATE
+local REGN_COST = 1
+local REGN_RATE = 1
+local REGN_RATE_COST = REGN_COST * REGN_RATE
+local MAX_SPRINT_NUMBER = 100
+
+local Toggles = {}
+
+local SprintModule = {}
+
+local function RegnSprint(player:Player,Stamina:IntValue)
+	while Stamina.Value < 100 do
+		local toggle = Toggles[player]
+		if toggle then
+			break
+		end
+		task.wait(REGN_RATE)
+		Stamina.Value += REGN_RATE_COST
+		UpdateSprintBar:FireClient(player, Stamina.Value, MAX_SPRINT_NUMBER)
+	end
+end
+
+local function Sprint(player:Player)
+	local Stamina = player:WaitForChild("Stamina")
+	local character = player.Character
+	local humanoid:Humanoid = character:WaitForChild("Humanoid")
+
+	humanoid.WalkSpeed = 20
+	while Stamina.Value > 0 do
+		local toggle = Toggles[player]
+		if toggle == false then
+			break
+		end
+		if Stamina.Value < 0 then
+			Stamina.Value = 0
+		end
+		task.wait(SPRINT_RATE)
+		Stamina.Value -= RATE_COST
+		UpdateSprintBar:FireClient(player, Stamina.Value, MAX_SPRINT_NUMBER)
+	end
+	Toggles[player] = false
+	humanoid.WalkSpeed = 16
+	RegnSprint(player,Stamina)
+end
+
+function SprintModule.SprintToggled(player:Player, Toggle:boolean)
+	if Toggle and Toggles[player] then
+		return nil
+	end
+	Toggles[player] = Toggle
+	if Toggle then
+		Sprint(player)
+	end
+end
+
+print("test")
+task.spawn(function()
+	print("test_2")
+	task.wait(10)
+	print("worked")
+	ToggleSprintBar:FireAllClients(true)
+end)
+
+
+return SprintModule
