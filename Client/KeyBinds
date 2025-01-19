@@ -1,0 +1,35 @@
+local ContextActionService = game:GetService("ContextActionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+local Action = Remotes:WaitForChild("Action")
+
+local ACTIONS = {}
+local STORED_KEY_BINDS = {
+	["Gamepad"] = {
+		["Sprint"] = Enum.KeyCode.ButtonL1,
+	},
+	["KeyBinds"] = {
+		["Sprint"] = Enum.KeyCode.LeftShift,
+	}
+}
+
+local KeyBinds = {}
+KeyBinds.__index = KeyBinds
+
+function ACTIONS.Sprint(actionName, inputState, inputObject)
+	if inputState == Enum.UserInputState.Begin or inputState == Enum.UserInputState.End then
+		Action:FireServer(actionName, inputState)
+	end
+end
+
+function KeyBinds.BindKeys()
+	local keys = STORED_KEY_BINDS["KeyBinds"]
+	local buttons = STORED_KEY_BINDS["Gamepad"]
+	for keyName, key in pairs(keys) do
+		local button = buttons[keyName]
+		ContextActionService:BindAction(keyName, ACTIONS[keyName], false, key, button)
+	end
+end
+
+return KeyBinds
