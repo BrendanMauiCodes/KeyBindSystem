@@ -25,7 +25,7 @@ For the server put the name of the keybind you put in the other module or else i
 
 ```
 function Actions.Name of action on the client module(player, inputState)
-      What input stae you want the key to do something like this
+      What input state you want the key to do something like this
       if inputState == Enum.UserInputState.Begin then
         What the action does when you hold the Key
       elseif input == Enum.UserInputState.End then
